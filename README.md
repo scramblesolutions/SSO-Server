@@ -168,6 +168,11 @@ visit `https://djecrety.ir/` to get secret key
     print(response.json())
     ```
 
+5. **For complete Example**
+
+   Download working client written in django pyhton from below repo:
+   `https://github.com/knowndir/SSO-Client`
+
 ## Troubleshooting
 
 - **Common Issues:**
