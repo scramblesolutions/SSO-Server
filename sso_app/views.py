@@ -98,7 +98,6 @@ def image_to_base64(image_field):
 
 
 def userinfo(claims, user):
-    print(claims)
     claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
     claims['picture'] = image_to_base64(user.profile.profile_image)
     claims['profile'] = user.profile.bio
