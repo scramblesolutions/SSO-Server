@@ -19,15 +19,15 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
 - Python 3.8+
 - Django 3.2+
 - django-oidc-provider 1.2.0+
-- PostgreSQL (recommended) or SQLite (for development)
+- MySQL (recommended) or SQLite (for development)
 
 ## Installation
 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/yourusername/yourrepository.git
-    cd yourrepository
+    git clone https://github.com/knowndir/SSO-Server.git
+    cd SSO-Server
     ```
 
 2. **Create and activate a virtual environment:**
@@ -45,34 +45,43 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
 
 ## Configuration
 
-1. **Copy the example environment file and update it with your settings:**
+**Update Django settings:**
 
-    ```bash
-    cp .env.example .env
-    ```
+Ensure the `settings.py` file is correctly configured to use `django-oidc-provider` and other required settings.
+    
+visit `https://djecrety.ir/` to get secret key
 
-    Edit the `.env` file with your preferred editor and update the database settings, secret key, and other configurations.
-
-2. **Update Django settings:**
-
-    Ensure the `settings.py` file is correctly configured to use `django-oidc-provider` and other required settings.
-
-    ```python
-    INSTALLED_APPS = [
-        ...
-        'django.contrib.sites',
-        'oidc_provider',
-        ...
-    ]
-
-    SITE_ID = 1
-
-    OIDC_USERINFO = 'path.to.your.userinfo'
-    ```
+   ```
+   SECRET_KEY = 'b(fyxs*xwj56c=_p_b@yb+@tlukv4lc9vgqzl61#k%33i3wt7g'
+   ```
 
 ## Database Setup
 
-1. **Run migrations to set up the database:**
+1. **Configure your database:**
+   
+   Settings for MySql
+   ```
+   DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'scramblesolutions',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': 'localhost',  # Set to 'localhost' or your DB server IP
+            'PORT': '3306',  # Set to the port number (default is 3306)
+        }
+    }
+   ```
+   Settings for SQLite if you want to test
+   ```
+   DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR + '/db.sqlite3',
+        }
+    }
+   ```
+2. **Run migrations to set up the database:**
 
     ```bash
     python manage.py migrate
@@ -83,13 +92,20 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
     ```bash
     python manage.py createsuperuser
     ```
-
+3. **Create RSA Key:**
+    ```bash
+    python manage.py creatersakey
+    ```
 ## Running the Server
 
 1. **Start the development server:**
-
+    
     ```bash
     python manage.py runserver
+    ```
+   Service will start on 3000 port or use custom port i.e. 7000
+    ```bash
+    python manage.py runserver 0.0.0.0:7000
     ```
 
     Access the server at `http://127.0.0.1:8000`.
@@ -107,12 +123,9 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
     Example configuration for Gunicorn:
 
     ```bash
-    gunicorn yourproject.wsgi:application --bind 0.0.0.0:8000
+    gunicorn sso_server.wsgi:application --bind 0.0.0.0:8000
     ```
-
-3. **Set up your database server (e.g., PostgreSQL) and ensure it's properly configured in your `settings.py` file.**
-
-4. **Configure environment variables for production.**
+3. **Configure environment variables for production.**
 
 ## Integration Guide
 
@@ -150,7 +163,7 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
 4. **Use the tokens to access protected resources:**
 
     ```python
-    protected_url = 'https://your-sso-server/protected-resource'
+    protected_url = 'https://your-sso-server/userinfo/'
     response = client.get(protected_url)
     print(response.json())
     ```
@@ -158,7 +171,7 @@ This repository contains the implementation of a Single Sign-On (SSO) server usi
 ## Troubleshooting
 
 - **Common Issues:**
-  - Ensure all environment variables are set correctly.
+  - Ensure environment is set correctly and installation is completed.
   - Check the Django logs for any errors and resolve them accordingly.
   - Verify client registration details (client ID, secret, redirect URIs) are correct.
 

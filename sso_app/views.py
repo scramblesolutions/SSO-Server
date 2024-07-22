@@ -9,9 +9,9 @@ from oidc_provider.lib.utils.common import cors_allow_any
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
-
+import base64
 from .serializers import UserSerializer
-from .utils import CustomScopeClaims
+# from .utils import CustomScopeClaims
 
 from django.views.decorators.http import require_http_methods
 
@@ -79,42 +79,31 @@ class HasScope(BasePermission):
 #     return Response(serializer.data)
 #     # return JsonResponse({})
 
-@require_http_methods(['GET', 'POST', 'OPTIONS'])
-@protected_resource_view(['openid'])
-def userinfo(request, *args, **kwargs):
+
+
+def image_to_base64(image_field):
     """
-    Create a dictionary with all the requested claims about the End-User.
-    See: http://openid.net/specs/openid-connect-core-1_0.html#UserInfoResponse
-
-    Return a dictionary.
+    Convert an image field to a base64 string.
     """
+    if not image_field:
+        return None
 
-    def set_headers(response):
-        response['Cache-Control'] = 'no-store'
-        response['Pragma'] = 'no-cache'
-        cors_allow_any(request, response)
-        return response
+    # Read the image file
+    image_data = image_field.read()
 
-    if request.method == 'OPTIONS':
-        return set_headers(HttpResponse())
+    # Encode the image to base64
+    base64_encoded_image = base64.b64encode(image_data).decode('utf-8')
 
-    token = kwargs['token']
+    return base64_encoded_image
 
-    dic = {
-        'sub': token.id_token.get('sub'),
-    }
 
-    standard_claims = StandardScopeClaims(token)
-    dic.update(standard_claims.create_response_dic())
+def userinfo(claims, user):
+    print(claims)
+    claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
+    claims['picture'] = image_to_base64(user.profile.profile_image)
+    claims['profile'] = user.profile.bio
 
-    if settings.OIDC_EXTRA_SCOPE_CLAIMS:
-        extra_claims = settings.get('OIDC_EXTRA_SCOPE_CLAIMS', import_str=True)(token)
-        dic.update(extra_claims.create_response_dic())
-
-    success_response = JsonResponse(dic, status=200)
-    set_headers(success_response)
-
-    return success_response
+    return claims
 
 
 def login_view(request):
@@ -152,7 +141,7 @@ def register_view(request):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password']
             )
-            return redirect('login')
+            return redirect('custom_login')
     else:
         form = RegisterForm()
 

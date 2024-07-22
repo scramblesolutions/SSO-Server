@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Request for Permission Custom{% endblock %}
+
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1>Request for Permission</h1>
+        {% if client.logo %}
+            <img src="{{ client.logo.url }}" width="60px" class="img-circle" alt="{{ client.name }} Logo">
+        {% else %}
+            <p>No logo available</p>
+        {% endif %}
+        <p>Client <strong>{{ client.name }}</strong> would like to access this information of you ...</p>
+
+        <form method="post" action="{% url 'oidc_provider:authorize' %}">
+
+            {% csrf_token %}
+
+            {{ hidden_inputs }}
+
+            <ul class="text-left">
+                {% for scope in scopes %}
+                    <li style="list-style: none;"><strong>{{ scope.name }}</strong><br><i>{{ scope.description }}</i></li>
+                {% endfor %}
+            </ul>
+
+            <input type="submit" class="btn btn-danger" value="Decline"/>
+            <input name="allow" class="btn btn-success" type="submit" value="Authorize"/>
+        </form>
+
+    </div>
+{% endblock %}

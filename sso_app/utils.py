@@ -4,11 +4,12 @@ from oidc_provider.lib.claims import ScopeClaims
 class CustomScopeClaims(ScopeClaims):
     print('yes there')
     info_profile = (
-        'profile_image',
-        'bio',
+        'profile_detail',
+        'Access to profile details i.e. profile image and bio',
     )
 
     def _claim_profile(self):
+        print('yes there')
         dic = super(CustomScopeClaims, self)._claim_profile()
         if dic is None:
             dic = {}
