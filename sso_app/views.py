@@ -1,21 +1,10 @@
-from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth import get_user_model, authenticate, login, logout
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_exempt
-from oidc_provider.lib.claims import StandardScopeClaims
-from oidc_provider.lib.utils.common import cors_allow_any
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated, BasePermission
-from rest_framework.response import Response
+from rest_framework.permissions import  BasePermission
 import base64
-from .serializers import UserSerializer
-# from .utils import CustomScopeClaims
-
-from django.views.decorators.http import require_http_methods
-
-from oidc_provider.lib.utils.oauth2 import protected_resource_view
 
 from sso_app.forms import LoginForm, RegisterForm, UserForm, ProfileForm
 
@@ -39,9 +28,6 @@ def update_profile(request):
         'profile_form': profile_form
     })
 
-
-# @csrf_exempt
-# @login_required
 def userinfoview(request):
     user = request.user
     profile = user.profile  # Assuming the Profile model is linked to the User model via a OneToOneField
@@ -69,16 +55,6 @@ class HasScope(BasePermission):
         token = request.auth
         scopes = token.get('scope', '').split()
         return required_scope in scopes
-
-
-# @require_http_methods(['GET'])
-# @protected_resource_view(['info_profile'])
-# def userinfo(request):
-#     user = get_user_model().objects.get(id=2)  # request.user
-#     serializer = UserSerializer(user)
-#     return Response(serializer.data)
-#     # return JsonResponse({})
-
 
 
 def image_to_base64(image_field):
@@ -154,3 +130,29 @@ def logout_view(request):
 
 def home_view(request):
     return render(request, 'home.html')
+
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile was successfully updated!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+
+    return render(request, 'edit_profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
+
+

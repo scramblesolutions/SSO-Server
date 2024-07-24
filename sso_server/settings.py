@@ -3,9 +3,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'b(fyxs*xwj56c=_p_b@yb+@tlukv4lc9vgqzl61#k%33i3wt7g'
@@ -56,8 +53,6 @@ OIDC_SESSION_MANAGEMENT_ENABLE = True
 
 ROOT_URLCONF = 'sso_server.urls'
 
-
-
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -87,7 +82,7 @@ WSGI_APPLICATION = 'sso_server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-#SQLite Database
+# SQLite Database
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -95,7 +90,7 @@ WSGI_APPLICATION = 'sso_server.wsgi.application'
 #     }
 # }
 
-#MySql Database
+# MySql Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -135,7 +130,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'

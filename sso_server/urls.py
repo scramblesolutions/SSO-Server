@@ -6,9 +6,10 @@ from django.urls import path, include
 import sso_app.views
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
     path('accounts/', include('sso_app.urls')),
-    path('home/', sso_app.views.home_view, name='custom_home'),
+    path('', sso_app.views.home_view, name='custom_home'),
     path('', include('oidc_provider.urls', namespace='oidc_provider')),
 
 ]
