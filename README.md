@@ -133,45 +133,103 @@ visit `https://djecrety.ir/` to get secret key
 
     Go to the Django admin panel and register a new OIDC client with the required redirect URIs and scopes.
 
-2. **Client Configuration:**
 
-    In your client application, configure the OpenID Connect (OIDC) settings to use the SSO server. Example for a Python client:
+2. **Postman Requests**
 
-    ```python
-    from authlib.integrations.requests_client import OAuth2Session
+      1. Get Token
+         ```bash
+         curl --location 'http://auth-server.com:8000/token/' \
+         --header 'Cache-Control: no-cache' \
+         --header 'Content-Type: application/x-www-form-urlencoded' \
+         --data-urlencode 'client_id=129843' \
+         --data-urlencode 'client_secret=98e55e9fa295958080584d03b025ae8f53ab376d3376d8a5b731b8d4' \
+         --data-urlencode 'redirect_uri=http://auth-client.com:8081/callback/' \
+         --data-urlencode 'grant_type=authorization_code'
+         ```
+            Go to Authorization Tab in Postman and provide 
 
-    client = OAuth2Session(
-        client_id='your-client-id',
-        client_secret='your-client-secret',
-        scope='openid profile email',
-        redirect_uri='https://your-client-app/callback'
-    )
+            1. client_id
 
-    authorization_url, state = client.create_authorization_url('https://your-sso-server/authorize')
-    print('Visit this URL to authorize:', authorization_url)
-    ```
+            2. client_secret
 
-3. **Handle the callback and exchange the authorization code for tokens:**
+            3. redirect_uri
 
-    ```python
-    token = client.fetch_token(
-        'https://your-sso-server/token',
-        authorization_response='https://your-client-app/callback?code=authorization_code'
-    )
-    ```
+            4. scope (multiple space delimited)
+         
+               Scope option are as below:
+   
+               "openid" -> just for user id like. 
 
-4. **Use the tokens to access protected resources:**
+                ```bash
+                {
+                  "sub": "3"
+                 }
+                 ```
+               "openid email" -> For user id and email like. 
 
-    ```python
-    protected_url = 'https://your-sso-server/userinfo/'
-    response = client.get(protected_url)
-    print(response.json())
-    ```
+                ```bash
+                {
+                "sub": "3",
+                "email": "user@abc.com"
+                }
+                 ```
+               "openid email profile" -> For user id, email and profile i.e. name, profile picture etc. 
 
-5. **For complete Example**
+                ```bash
+                {
+                "sub": "3",
+                "email": "bhzahir@abc.com",
+                "name": "Burhan Ul Haqq Zahir",
+                "given_name": "Burhan Ul Haqq",
+                "family_name": "Zahir",
+                "nickname": "bhzahir",
+                "profile": "Nice bio updated.",
+                "picture": "BASE64 IMAGE",
+                }
+                 ```
 
-   Download working client written in django pyhton from below repo:
-   `https://github.com/knowndir/SSO-Client`
+               Above Scop will help you to get customer info in next step
+       
+      2. Get Client Info
+
+         ```bash
+            curl --location 'http://auth-server.com:8000/userinfo/' \
+         --header 'Cache-Control: no-cache' \
+         --header 'grant_type: client_credentials' \
+         --header 'Authorization: Bearer Code_here'
+         ```
+         
+         replace Code_here with Access Token you received in Get Token call
+            
+         You will get information as per scope defined in getting access token.
+      
+      3. Refresh Token
+    
+         ```bash
+         curl --location 'http://auth-server.com:8000/token/' \
+         --header 'Cache-Control: no-cache' \
+         --header 'Content-Type: application/x-www-form-urlencoded' \
+         --data-urlencode 'client_id=011326' \
+         --data-urlencode 'client_secret=0cded52c6f98e9843ae1b4ffc363deccdb74653e5ab0d830b04712a7' \
+         --data-urlencode 'grant_type=refresh_token' \
+         --data-urlencode 'refresh_token=472c4ab2a75a4f6eb0a631788ef2245e'
+         ```
+         Change parameters accordingly 
+
+            1. client_id
+
+            2. client_secret
+
+            3. refresh_token (you received in Get Token API Call)
+         
+3. **Integration Code Guide**
+   
+   Here are some links for OICD integration guide
+   
+   1. PHP
+   2. Python
+      
+      
 
 ## Troubleshooting
 
