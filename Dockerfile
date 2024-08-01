@@ -28,4 +28,4 @@ EXPOSE 8000
 ENV DJANGO_SETTINGS_MODULE=sso_server.settings
 
 # Run the application
-CMD ["gunicorn", "sso_server.wsgi:application", "--bind", "0.0.0.0:8000"]
+RUN gunicorn sso_server.wsgi:application --bind 0.0.0.0:8000
