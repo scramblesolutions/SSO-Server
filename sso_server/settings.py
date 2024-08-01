@@ -13,7 +13,7 @@ SECRET_KEY = os.getenv('SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1', '89.117.172.249', 'sandbox.scramblesolutions.com']
+ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1', '89.117.172.249', 'sandbox.scramblesolutions.com', '0.0.0.0', 'localhost']
 
 # Application definition
 
