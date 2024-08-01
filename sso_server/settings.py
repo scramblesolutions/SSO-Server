@@ -1,16 +1,19 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b(fyxs*xwj56c=_p_b@yb+@tlukv4lc9vgqzl61#k%33i3wt7g'
+
+SECRET_KEY = os.getenv('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1']
+ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1', '89.117.172.249']
 
 # Application definition
 
@@ -47,6 +50,7 @@ MIDDLEWARE = [
 ]
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:63342",
+    "https://sandbox.scramblesolutions.com",
 ]
 
 OIDC_SESSION_MANAGEMENT_ENABLE = True
@@ -94,11 +98,12 @@ WSGI_APPLICATION = 'sso_server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scramblesolutions',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  # Set to 'localhost' or your DB server IP
-        'PORT': '3306',  # Set to the port number (default is 3306)
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+
     }
 }
 
