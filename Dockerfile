@@ -8,6 +8,7 @@ RUN apt-get update && \
     libmariadb-dev \
     pkg-config \
     curl \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
