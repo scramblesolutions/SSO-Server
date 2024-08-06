@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 load_dotenv()
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
@@ -13,7 +13,24 @@ SECRET_KEY = os.getenv('SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1', '89.117.172.249', 'sandbox.scramblesolutions.com','scramblesolutions.com', '0.0.0.0', 'localhost']
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://0.0.0.0:8000",
+    "http://localhost:8000",
+    "http://localhost",
+    "https://sandbox.scramblesolutions.com",
+    "https://scramblesolutions.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://0.0.0.0:8000",
+    "http://localhost:8000",
+    "http://localhost",
+    "https://sandbox.scramblesolutions.com",
+    "https://scramblesolutions.com",
+]
+
 
 # Application definition
 
@@ -48,11 +65,6 @@ MIDDLEWARE = [
     'oidc_provider.middleware.SessionManagementMiddleware',
 
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:63342",
-    "https://sandbox.scramblesolutions.com/",
-    "https://scramblesolutions.com/",
-]
 
 OIDC_SESSION_MANAGEMENT_ENABLE = True
 
@@ -70,7 +82,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR + '/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -137,12 +149,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

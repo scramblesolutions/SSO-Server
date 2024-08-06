@@ -1,32 +1,25 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
-# Install system dependencies for building mysqlclient and curl for health check
-RUN apt-get update && \
-    apt-get install -y \
-    build-essential \
-    libmariadb-dev \
-    pkg-config \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    mariadb-connector-c-dev \
+    mariadb-dev \
+    pkgconfig
 
-# Set the working directory in the container
-WORKDIR /app
+# Upgrade pip
+RUN pip install --upgrade pip
 
-# Copy the current directory contents into the container at /app
+# Copy requirements and install them
+COPY ./requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the application code
 COPY . /app
 
-# Install Python packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Set the working directory
+WORKDIR /app
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
-
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
-
-# Define environment variable
-ENV DJANGO_SETTINGS_MODULE=sso_server.settings
-
-# Command to run the application
-CMD ["gunicorn", "sso_server.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Copy the entrypoint script and set the entrypoint
+COPY ./entrypoint.sh /
+ENTRYPOINT ["sh", "/entrypoint.sh"]
