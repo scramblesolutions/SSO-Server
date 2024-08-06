@@ -63,7 +63,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oidc_provider.middleware.SessionManagementMiddleware',
-
 ]
 
 OIDC_SESSION_MANAGEMENT_ENABLE = True
