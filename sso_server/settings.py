@@ -22,6 +22,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:81",
     "https://sandbox.scramblesolutions.com",
     "https://scramblesolutions.com",
+    "http://localhost:3000",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -31,6 +32,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:81",
     "https://sandbox.scramblesolutions.com",
     "https://scramblesolutions.com",
+    "http://localhost:3000",
 ]
 
 
