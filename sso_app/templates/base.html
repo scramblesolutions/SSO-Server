@@ -8,8 +8,8 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         header {
-            font-family: "Calibri";
-            background-color: #222119;
+            font-family: "Inter", sans-serif;
+            background-color: #22211E;
             margin: 0;
             padding: 0;
         }
@@ -17,24 +17,31 @@
         body {
             margin: 0;
             padding: 0;
+            background-color: #2d2c29;
+            font-family: "Inter", sans-serif;
+        }
+
+        .text-color{
+            color: #B8B8AB;
         }
 
         .navbar {
             margin: 0;
             padding: 0;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.27);
-        }
-
-        .navbar-brand {
-            margin-left: 8vh;
+            background-color: #22211E;
         }
 
         .navbar-nav .nav-link {
-            color: darkgrey;
+            color: #B8B8AB;
         }
 
         .navbar-nav .nav-link:hover {
             color: #ffc901;
+        }
+
+        .navbar-nav .nav-item{
+            margin: 0 4px;
         }
 
         .navbar-nav .nav-item a {
@@ -44,10 +51,6 @@
 
         .navbar-nav .nav-item .nav-link:hover {
             color: #ffc901;
-        }
-
-        .nav-right {
-            margin-right: 10vh;
         }
 
         .btn-custom {
@@ -64,12 +67,117 @@
         .btn-custom:hover {
             background-color: #fedb5e;
         }
+
+        .nav-container{
+            max-width: 1200px;
+            margin: auto ;
+        }
+        .notice-box{
+            background-color: #22211E;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .text-highlight{
+            color: #F7F9BE;
+        }
+
+        .text-primary-sc{
+            color: #ffc901;
+        }
+
+        .text-primary-sc:hover{
+            color: #fedb5e;
+        }
+        input[type="text"], input[type="email"], input[type="password"], textarea{
+            background-color: #272520;
+            color: #B8B8AB;
+            border: none;
+            border: 3px solid #b8b8aba5;
+            border-radius: 16px;
+            padding: 8px;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, textarea:focus{
+            outline: none;
+            border: 3px solid #ffc901;
+            background-color: #272520;
+            color: #B8B8AB !important;
+        }
+
+        input[type="file"]{
+            background-color: #272520;
+            color: #B8B8AB;
+            border: none !important;
+            border: 0px;
+            border-radius: 16px;
+            padding: 8px;
+        }
+
+        /* .file-upload{
+            background-color: #ffc901;
+            color: #222119;
+            font-weight: 500;
+            border: none;
+            padding: 8px 16px;
+            border-radius:20px;
+            
+        } */
+
+        input:focus, textarea:focus{
+            outline: none;
+            border: 3px solid #ffc901;
+            background-color: #272520;
+        }
+
+        .sc-card{
+            background-color: #22211E;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.27);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .sc-btn-primary{
+            background-color: #ffc901;
+            color: #222119;
+            font-weight: 500;
+            border: none;
+            padding: 8px 16px;
+            border-radius:20px;
+        }
+
+        .sc-btn-primary:hover{
+            background-color: #fedb5e;
+        }
+        .main{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 60px);
+        }
+
+        .home-notice-box{
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 36px;
+        }
+
+        .home-heading{
+            font-size: 3rem;
+            font-weight: 500;
+        }
+
+
     </style>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid ">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid nav-container ">
             <a class="navbar-brand" href="#">
                 <img src="{% static 'logo.svg' %}" alt width="140" height="50">
             </a>
@@ -91,7 +199,7 @@
                         <li class="nav-item">
                             <form method="post" action="{% url 'custom_logout' %}">
                                 {% csrf_token %}
-                                <button class="btn btn-primary" type="submit">Logout</button>
+                                <button class="btn sc-btn-primary" type="submit">Logout</button>
                             </form>
                         </li>
                     {% else %}
@@ -109,7 +217,7 @@
     </nav>
 </header>
 
-<div class="container mt-4">
+<div class="container main">
     {% block content %}{% endblock %}
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
