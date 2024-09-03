@@ -6,9 +6,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card mt-5">
-                    <div class="card-header text-center">
-                        <h4>Login</h4>
+                <div class="sc-card mt-5">
+                    <div class="sc-card-header text-center text-highlight">
+                        <h4>Account Login</h4>
                     </div>
                     <div class="card-body">
                         <form method="post">
@@ -17,14 +17,14 @@
                                 <input type="hidden" name="next" value="{{ next }}">
                             {% endif %}
                             <div class="form-group">
-                                <label for="username">Username</label>
+                                <label for="username" class="text-color">Username</label>
                                 {{ form.username }}
                             </div>
                             <div class="form-group">
-                                <label for="password">Password</label>
+                                <label for="password" class="text-color">Password</label>
                                 {{ form.password }}
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Login</button>
+                            <button type="submit" class="btn sc-btn-primary btn-block">Sign In</button>
                         </form>
                         {% if form.errors %}
                             <div class="alert alert-danger mt-3">

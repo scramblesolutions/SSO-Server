@@ -1,119 +1,269 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{% endblock %} | scramblesolutions.com</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
-        header {
-            font-family: "Calibri";
-            background-color: #222119;
-            margin: 0;
-            padding: 0;
-        }
+      header {
+        font-family: "Inter", sans-serif;
+        background-color: #22211e;
+        margin: 0;
+        padding: 0;
+      }
 
-        body {
-            margin: 0;
-            padding: 0;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #2d2c29;
+        font-family: "Inter", sans-serif;
+      }
 
-        .navbar {
-            margin: 0;
-            padding: 0;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.27);
-        }
+      .text-color {
+        color: #b8b8ab;
+      }
 
-        .navbar-brand {
-            margin-left: 8vh;
-        }
+      .navbar {
+        margin: 0;
+        padding: 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.27);
+        background-color: #22211e;
+      }
 
-        .navbar-nav .nav-link {
-            color: darkgrey;
-        }
+      .navbar-nav .nav-link {
+        color: #b8b8ab;
+      }
 
-        .navbar-nav .nav-link:hover {
-            color: #ffc901;
-        }
+      .navbar-nav .nav-link:hover {
+        color: #ffc901;
+      }
 
-        .navbar-nav .nav-item a {
-            font-size: 16px;
-            font-weight: 600
-        }
+      .navbar-nav .nav-item {
+        margin: 0 4px;
+      }
 
-        .navbar-nav .nav-item .nav-link:hover {
-            color: #ffc901;
-        }
+      .navbar-nav .nav-item a {
+        font-size: 16px;
+        font-weight: 600;
+      }
 
-        .nav-right {
-            margin-right: 10vh;
-        }
+      .navbar-nav .nav-item .nav-link:hover {
+        color: #ffc901;
+      }
 
-        .btn-custom {
-            border-radius: 20px;
+      .btn-custom {
+        border-radius: 20px;
+        background-color: #ffc901;
+        color: #222119;
+        font-weight: 300;
+        border: none;
+        padding: 8px 16px;
+        margin-left: 1vh;
+      }
+
+      .btn-custom:hover {
+        background-color: #fedb5e;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: auto;
+      }
+      @media screen and (max-width: 768px) {
+        .nav-container {
+          margin: 0 20px;
+        }
+      }
+
+      .notice-box {
+        background-color: #22211e;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+
+      .text-highlight {
+        color: #f7f9be;
+      }
+
+      .text-primary-sc {
+        color: #ffc901;
+      }
+
+      .text-primary-sc:hover {
+        color: #fedb5e;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      textarea {
+        background-color: #272520;
+        color: #b8b8ab;
+        border: none;
+        border: 3px solid #b8b8aba5;
+        border-radius: 16px;
+        padding: 8px;
+      }
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus,
+      textarea:focus {
+        outline: none;
+        border: 3px solid #ffc901;
+        background-color: #272520;
+        color: #b8b8ab !important;
+      }
+
+      input[type="file"] {
+        background-color: #272520;
+        color: #b8b8ab;
+        border: none !important;
+        border: 0px;
+        border-radius: 16px;
+        padding: 8px;
+      }
+
+      /* .file-upload{
             background-color: #ffc901;
             color: #222119;
-            font-weight: 300;
+            font-weight: 500;
             border: none;
             padding: 8px 16px;
-            margin-left: 1vh;
+            border-radius:20px;
+            
+        } */
 
-        }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border: 3px solid #ffc901;
+        background-color: #272520;
+      }
 
-        .btn-custom:hover {
-            background-color: #fedb5e;
+      .sc-card {
+        background-color: #22211e;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.27);
+        padding: 20px;
+        margin-top: 20px;
+      }
+
+      .sc-btn-primary {
+        background-color: #ffc901;
+        color: #222119;
+        font-weight: 500;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+      }
+
+      .sc-btn-primary:hover {
+        background-color: #fedb5e;
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 60px);
+      }
+
+      .home-notice-box {
+        min-height: 500px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 36px;
+      }
+
+      .home-heading {
+        font-size: 3rem;
+        font-weight: 500;
+      }
+      .toggler-btn {
+        background-color: #272520;
+        /* border: none; */
+        border-radius: 10px;
+        color: #ffc901;
+      }
+
+      .navbar-toggler-icon {
+        color: #ffc901;
+        border-radius: 10px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+      }
+
+      @media screen and (max-width: 768px) {
+        div#navbarNav {
+          padding: 24px 4px;
         }
+        .navbar-nav{
+          gap: 6px;
+        }      
+      }
+
     </style>
-</head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid ">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'logo.svg' %}" alt width="140" height="50">
-            </a>
-            <button class="navbar-toggler" type="button"
-                    data-toggle="collapse" data-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse nav-right" id="navbarNav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'custom_home' %}">Home</a>
-                    </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'profile' %}">Edit Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'custom_logout' %}">
-                                {% csrf_token %}
-                                <button class="btn btn-primary" type="submit">Logout</button>
-                            </form>
-                        </li>
-                    {% else %}
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid nav-container">
+          <a class="navbar-brand" href="#">
+            <img src="{% static 'logo.svg' %}" alt width="140" height="50" />
+          </a>
+          <button
+            class="navbar-toggler toggler-btn"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse nav-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'custom_home' %}">Home</a>
+              </li>
+              {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'profile' %}">Edit Profile</a>
+              </li>
+              <li class="nav-item">
+                <form method="post" action="{% url 'custom_logout' %}">
+                  {% csrf_token %}
+                  <button class="btn sc-btn-primary" type="submit">
+                    Logout
+                  </button>
+                </form>
+              </li>
+              {% else %}
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'custom_login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'custom_register' %}">Register</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'custom_login' %}">Login</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'custom_register' %}"
+                  >Register</a
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </div>
         </div>
-    </nav>
-</header>
+      </nav>
+    </header>
 
-<div class="container mt-4">
-    {% block content %}{% endblock %}
-</div>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <div class="container main">{% block content %}{% endblock %}</div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>

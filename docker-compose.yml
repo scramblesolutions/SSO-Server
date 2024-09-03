@@ -1,0 +1,34 @@
+version: '3.7'
+
+services:
+  django_gunicorn:
+    build:
+      context: .
+    volumes:
+      - static:/static
+    env_file:
+      - .env
+    ports:
+      - "8001:8000"
+
+  nginx:
+    build: ./nginx
+    volumes:
+      - static:/static
+    ports:
+      - "81:80"
+    depends_on:
+      - django_gunicorn
+
+  db:
+    image: mysql:5.7
+    env_file:
+      - .env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+
+volumes:
+  static:
+  mysql_data:

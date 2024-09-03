@@ -6,30 +6,30 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card mt-5 shadow-sm">
-                <div class="card-header text-center bg-primary text-white">
+            <div class="sc-card mt-5 shadow-sm">
+                <div class="card-header text-center text-highlight">
                     <h4>Create an Account</h4>
                 </div>
                 <div class="card-body">
                     <form method="post" novalidate>
                         {% csrf_token %}
                         <div class="form-group mb-3">
-                            <label for="username" class="form-label">Username</label>
+                            <label for="username" class="form-label text-color">Username</label>
                             {{ form.username }}
                         </div>
                         <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email</label>
+                            <label for="email" class="form-label text-color">Email</label>
                             {{ form.email }}
                         </div>
                         <div class="form-group mb-3">
-                            <label for="password" class="form-label">Password</label>
+                            <label for="password" class="form-label text-color">Password</label>
                             {{ form.password }}
                         </div>
                         <div class="form-group mb-3">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            <label for="confirm_password" class="form-label text-color">Confirm Password</label>
                             {{ form.confirm_password }}
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        <button type="submit" class="btn sc-btn-primary btn-block">Register</button>
                     </form>
                     {% if form.errors %}
                         <div class="alert alert-danger mt-3">
@@ -44,8 +44,8 @@
                         </div>
                     {% endif %}
                 </div>
-                <div class="card-footer text-center">
-                    <small>Already have an account? <a href="{% url 'custom_login' %}">Login here</a></small>
+                <div class="card-footer text-center text-color">
+                    <small>Already have an account? <a href="{% url 'custom_login' %}" class="text-primary-sc">Login here</a></small>
                 </div>
             </div>
         </div>

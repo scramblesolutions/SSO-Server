@@ -18,49 +18,52 @@
     <div class="container mt-1 gradient-bg p-1">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-                <div class="card shadow-lg">
-                    <div class="card-header bg-primary text-white text-center">
+                <div class="sc-card shadow-lg">
+                    <div class="sc-card-header text-highlight text-center">
                         <h3>User Information</h3>
                     </div>
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="firstName" class="form-label">{{ user_form.first_name.label_tag }}</label>
+                                <label for="firstName" class="form-label text-color">{{ user_form.first_name.label_tag }}</label>
                                 {{ user_form.first_name }}
                                 <div class="invalid-feedback">
                                     Please enter your first name.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="lastName" class="form-label">{{ user_form.last_name.label_tag }}</label>
+                                <label for="lastName" class="form-label text-color">{{ user_form.last_name.label_tag }}</label>
                                 {{ user_form.last_name }}
                                 <div class="invalid-feedback">
                                     Please enter your last name.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">{{ user_form.email.label_tag }}</label>
+                                <label for="email" class="form-label text-color">{{ user_form.email.label_tag }}</label>
                                 {{ user_form.email }}
                                 <div class="invalid-feedback">
                                     Please enter a valid email address.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                {{ profile_form.profile_image.label_tag }}
+                                
+                                <span class="text-color">{{ profile_form.profile_image.label_tag }}</span>
                                 {{ profile_form.profile_image }}
                                 <div class="invalid-feedback">
                                     Please upload a profile image.
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <label for="bio" class="form-label">{{ profile_form.bio.label_tag }}</label>
-                                {{ profile_form.bio }}
+                                <label for="bio" class="form-label text-color">{{ profile_form.bio.label_tag }}</label>
+                                <div class="text-color ">
+                                    {{ profile_form.bio }}
+                                </div>
                                 <div class="invalid-feedback">
                                     Please enter a bio.
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-custom w-100">Save Changes</button>
+                            <button type="submit" class="btn sc-btn-primary w-100">Save Changes</button>
                         </form>
                     </div>
                 </div>

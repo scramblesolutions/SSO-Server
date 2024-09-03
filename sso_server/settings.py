@@ -1,16 +1,40 @@
 import os
+from dotenv import load_dotenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'b(fyxs*xwj56c=_p_b@yb+@tlukv4lc9vgqzl61#k%33i3wt7g'
+
+SECRET_KEY = os.getenv('SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auth-server.com', '127.0.0.1']
+ALLOWED_HOSTS = ["*"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://0.0.0.0:8000",
+    "http://localhost:8000",
+    "http://localhost",
+    "http://localhost:81",
+    "https://sandbox.scramblesolutions.com",
+    "https://scramblesolutions.com",
+    "http://localhost:3000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://0.0.0.0:8000",
+    "http://localhost:8000",
+    "http://localhost",
+    "http://localhost:81",
+    "https://sandbox.scramblesolutions.com",
+    "https://scramblesolutions.com",
+    "http://localhost:3000",
+]
+
 
 # Application definition
 
@@ -43,10 +67,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'oidc_provider.middleware.SessionManagementMiddleware',
-
-]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:63342",
 ]
 
 OIDC_SESSION_MANAGEMENT_ENABLE = True
@@ -65,7 +85,7 @@ REST_FRAMEWORK = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [BASE_DIR + '/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -94,11 +114,16 @@ WSGI_APPLICATION = 'sso_server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'scramblesolutions',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',  # Set to 'localhost' or your DB server IP
-        'PORT': '3306',  # Set to the port number (default is 3306)
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            'connect_timeout': 10,
+        },
+        'CONN_MAX_AGE': 600, 
     }
 }
 
@@ -131,12 +156,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 # STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

@@ -50,6 +50,6 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ['profile_image', 'bio']
         widgets = {
-            'profile_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
-            'bio': forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Write something about yourself...'}),
+            'profile_image': forms.ClearableFileInput(attrs={'class': 'file-upload'}),
+            'bio': forms.Textarea(attrs={'class': 'w-100', 'placeholder': 'Write something about yourself...'}),
         }
