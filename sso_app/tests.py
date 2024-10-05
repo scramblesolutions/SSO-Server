@@ -5,6 +5,7 @@ from .models import Vendor, Pseudonym
 from oidc_provider.models import Client, Token
 from oidc_provider.lib.utils.token import create_token
 from django.utils import timezone
+from datetime import timedelta
 
 User = get_user_model()
 
@@ -77,11 +78,18 @@ class UserInfoViewTest(TestCase):
             redirect_uris=["http://example.com"],
         )
         self.token = create_token(self.user, self.oidc_client, [])
-        self.id_token = self.token.id_token
+        self.access_token = Token.objects.create(
+            user=self.user,
+            client=self.oidc_client,
+            expires_at=timezone.now() + timedelta(days=1),
+            _scope='openid profile',
+            access_token=self.token.access_token,
+            refresh_token=self.token.refresh_token,
+        )
 
     def test_userinfo_with_pseudonym(self):
         headers = {
-            'HTTP_AUTHORIZATION': f'Bearer {self.token.access_token}'
+            'HTTP_AUTHORIZATION': f'Bearer {self.access_token.access_token}'
         }
         response = self.client.get(reverse('oidc_provider:userinfo'), **headers)
         self.assertEqual(response.status_code, 200)
