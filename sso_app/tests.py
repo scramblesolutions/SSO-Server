@@ -90,10 +90,6 @@ class UserInfoViewTest(TestCase):
         # Create an RSA key for token signing
         RSAKey.objects.create(key='testkey')
         
-        # Create ID token
-        aud = self.oidc_client.client_id
-        id_token = create_id_token(user=self.user, aud=aud)
-        
         # Create an access token
         self.access_token = Token.objects.create(
             user=self.user,
@@ -102,8 +98,15 @@ class UserInfoViewTest(TestCase):
             _scope='openid profile',
             access_token='access_token',
             refresh_token='refresh_token',
-            _id_token=id_token
         )
+        
+        # Create ID token
+        aud = self.oidc_client.client_id
+        id_token = create_id_token(token=self.access_token, user=self.user, aud=aud)
+        
+        # Update the access token with the id_token
+        self.access_token._id_token = id_token
+        self.access_token.save()
 
     def test_userinfo_with_pseudonym(self):
         headers = {
