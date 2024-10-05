@@ -3,8 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Vendor, Pseudonym
 from oidc_provider.models import Client, Token, RSAKey, ResponseType
-from oidc_provider.lib.utils.token import create_token
-from oidc_provider.lib.utils.oauth2 import generate_id_token
+from oidc_provider.lib.utils.token import create_id_token
 from django.utils import timezone
 from datetime import timedelta
 import json
@@ -91,8 +90,8 @@ class UserInfoViewTest(TestCase):
         # Create an RSA key for token signing
         RSAKey.objects.create(key='testkey')
         
-        # Generate id_token
-        id_token_dic = generate_id_token(self.user, self.oidc_client)
+        # Create ID token
+        id_token = create_id_token(self.user, self.oidc_client)
         
         # Create an access token
         self.access_token = Token.objects.create(
@@ -102,7 +101,7 @@ class UserInfoViewTest(TestCase):
             _scope='openid profile',
             access_token='access_token',
             refresh_token='refresh_token',
-            _id_token=json.dumps(id_token_dic)
+            _id_token=id_token
         )
 
     def test_userinfo_with_pseudonym(self):
