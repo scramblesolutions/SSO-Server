@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Vendor, Pseudonym
-from oidc_provider.models import Client, Token, RSAKey
+from oidc_provider.models import Client, Token, RSAKey, ResponseType
 from oidc_provider.lib.utils.token import create_token
 from django.utils import timezone
 from datetime import timedelta
@@ -77,8 +77,12 @@ class UserInfoViewTest(TestCase):
             client_id="test_client_id",
             client_secret="test_client_secret",
             redirect_uris=["http://example.com"],
-            response_types=['code', 'id_token token'],
         )
+        
+        # Add response types
+        code_response_type = ResponseType.objects.get(value='code')
+        token_response_type = ResponseType.objects.get(value='token')
+        self.oidc_client.response_types.add(code_response_type, token_response_type)
         
         # Create an RSA key for token signing
         RSAKey.objects.create(key='testkey')
