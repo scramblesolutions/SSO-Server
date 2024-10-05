@@ -2,10 +2,11 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Vendor, Pseudonym
-from oidc_provider.models import Client, Token
+from oidc_provider.models import Client, Token, RSAKey
 from oidc_provider.lib.utils.token import create_token
 from django.utils import timezone
 from datetime import timedelta
+import json
 
 User = get_user_model()
 
@@ -76,15 +77,24 @@ class UserInfoViewTest(TestCase):
             client_id="test_client_id",
             client_secret="test_client_secret",
             redirect_uris=["http://example.com"],
+            response_types=['code', 'id_token token'],
         )
-        self.token = create_token(self.user, self.oidc_client, [])
+        
+        # Create an RSA key for token signing
+        RSAKey.objects.create(key='testkey')
+        
+        # Create a token
+        token = create_token(self.user, self.oidc_client, [])
+        
+        # Create an access token
         self.access_token = Token.objects.create(
             user=self.user,
             client=self.oidc_client,
             expires_at=timezone.now() + timedelta(days=1),
             _scope='openid profile',
-            access_token=self.token.access_token,
-            refresh_token=self.token.refresh_token,
+            access_token=token.access_token,
+            refresh_token=token.refresh_token,
+            _id_token=json.dumps(token.id_token)
         )
 
     def test_userinfo_with_pseudonym(self):
