@@ -11,7 +11,7 @@ from sso_app.models import Vendor, Pseudonym
 
 User = get_user_model()
 
-def userinfoview(request):
+def userinfo(request):
     user = request.user
     profile = user.profile
 
@@ -61,21 +61,6 @@ def image_to_base64(image_field):
     base64_encoded_image = base64.b64encode(image_data).decode('utf-8')
 
     return base64_encoded_image
-
-def userinfo(claims, user):
-    vendor_client_id = claims.get('aud')  # 'aud' claim contains the client ID
-    if vendor_client_id:
-        vendor = Vendor.objects.get(client_id=vendor_client_id)
-        pseudonym, _ = Pseudonym.objects.get_or_create(user=user, vendor=vendor)
-        claims['sub'] = str(pseudonym.pseudonym)  # Use the pseudonym as the subject identifier
-    else:
-        claims['sub'] = str(user.id)  # Fallback to user ID if no vendor is identified
-
-    claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
-    claims['picture'] = image_to_base64(user.profile.profile_image)
-    claims['profile'] = user.profile.bio
-
-    return claims
 
 def login_view(request):
     if request.method == 'POST':
