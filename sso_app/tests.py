@@ -110,6 +110,10 @@ class UserInfoViewTest(TestCase):
         aud = self.oidc_client.client_id
         id_token = create_id_token(token=self.access_token, user=self.user, aud=aud, request=request)
         
+        # Ensure id_token is a valid JSON string
+        if isinstance(id_token, dict):
+            id_token = json.dumps(id_token)
+        
         # Update the access token with the id_token
         self.access_token._id_token = id_token
         self.access_token.save()
@@ -124,3 +128,11 @@ class UserInfoViewTest(TestCase):
         self.assertNotEqual(data['sub'], str(self.user.id))
         pseudonym = Pseudonym.objects.get(user=self.user, vendor=self.vendor)
         self.assertEqual(data['sub'], str(pseudonym.pseudonym))
+
+    def test_id_token_json(self):
+        # Add this test to verify the ID token is valid JSON
+        id_token = self.access_token._id_token
+        try:
+            json.loads(id_token)
+        except json.JSONDecodeError:
+            self.fail("ID token is not valid JSON")
