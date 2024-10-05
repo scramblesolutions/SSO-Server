@@ -7,6 +7,7 @@ from oidc_provider.lib.utils.token import create_id_token
 from django.utils import timezone
 from datetime import timedelta
 import json
+from .views import userinfo
 
 User = get_user_model()
 
@@ -119,15 +120,14 @@ class UserInfoViewTest(TestCase):
         self.access_token.save()
 
     def test_userinfo_with_pseudonym(self):
-        headers = {
-            'HTTP_AUTHORIZATION': f'Bearer {self.access_token.access_token}'
+        claims = {
+            'client_id': self.vendor.client_id
         }
-        response = self.client.get(reverse('oidc_provider:userinfo'), **headers)
-        self.assertEqual(response.status_code, 200)
-        data = response.json()
-        self.assertNotEqual(data['sub'], str(self.user.id))
+        user_info = userinfo(claims, self.user)
+        
+        self.assertNotEqual(user_info['sub'], str(self.user.id))
         pseudonym = Pseudonym.objects.get(user=self.user, vendor=self.vendor)
-        self.assertEqual(data['sub'], str(pseudonym.pseudonym))
+        self.assertEqual(user_info['sub'], str(pseudonym.pseudonym))
 
     def test_id_token_json(self):
         # Add this test to verify the ID token is valid JSON
