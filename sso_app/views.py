@@ -11,12 +11,11 @@ from sso_app.models import Vendor, Pseudonym
 
 User = get_user_model()
 
-def userinfo(request):
-    user = request.user
+def userinfo(claims, user):
     profile = user.profile
 
-    # Get the vendor from the client_id in the request
-    vendor_client_id = request.GET.get('client_id')
+    # Get the vendor from the client_id in the claims
+    vendor_client_id = claims.get('client_id')
     if vendor_client_id:
         vendor = Vendor.objects.get(client_id=vendor_client_id)
         pseudonym, _ = Pseudonym.objects.get_or_create(user=user, vendor=vendor)
@@ -34,7 +33,7 @@ def userinfo(request):
         "bio": profile.bio
     }
 
-    return JsonResponse(user_info)
+    return user_info
 
 class HasScope(BasePermission):
     def has_permission(self, request, view):
