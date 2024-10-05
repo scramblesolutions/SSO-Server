@@ -91,7 +91,8 @@ class UserInfoViewTest(TestCase):
         RSAKey.objects.create(key='testkey')
         
         # Create ID token
-        id_token = create_id_token(self.user, self.oidc_client)
+        aud = self.oidc_client.client_id
+        id_token = create_id_token(self.user, aud, self.oidc_client)
         
         # Create an access token
         self.access_token = Token.objects.create(
