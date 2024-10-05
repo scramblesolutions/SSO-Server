@@ -79,10 +79,13 @@ class UserInfoViewTest(TestCase):
             redirect_uris=["http://example.com"],
         )
         
-        # Add response types
-        code_response_type = ResponseType.objects.get(value='code')
-        token_response_type = ResponseType.objects.get(value='token')
-        self.oidc_client.response_types.add(code_response_type, token_response_type)
+        # Create response types
+        code_response_type, _ = ResponseType.objects.get_or_create(value='code')
+        token_response_type, _ = ResponseType.objects.get_or_create(value='token')
+        id_token_response_type, _ = ResponseType.objects.get_or_create(value='id_token')
+        
+        # Add response types to the client
+        self.oidc_client.response_types.add(code_response_type, token_response_type, id_token_response_type)
         
         # Create an RSA key for token signing
         RSAKey.objects.create(key='testkey')
