@@ -4,7 +4,7 @@ from django.urls import reverse
 from .models import Vendor, Pseudonym
 from oidc_provider.models import Client
 from oidc_provider.lib.utils.token import create_id_token
-from oidc_provider.lib.utils.oauth2 import create_token
+from oidc_provider.lib.utils.oauth2 import get_token_info
 
 User = get_user_model()
 
@@ -80,7 +80,7 @@ class UserInfoViewTest(TestCase):
 
     def test_userinfo_with_pseudonym(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse('userinfo'), {'client_id': 'test_client_id'})
+        response = self.client.get(reverse('oidc_provider:userinfo'), {'client_id': 'test_client_id'})
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertNotEqual(data['sub'], str(self.user.id))
@@ -107,7 +107,7 @@ class OIDCClaimsTest(TestCase):
         )
 
     def test_id_token_contains_pseudonym(self):
-        token = create_token(self.user, self.client, [])
+        token = get_token_info(self.user, self.client, [])
         id_token = create_id_token(token, self.user, self.client)
         self.assertNotEqual(id_token['sub'], str(self.user.id))
         pseudonym = Pseudonym.objects.get(user=self.user, vendor=self.vendor)
