@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Vendor, Pseudonym
@@ -63,6 +63,7 @@ class PseudonymModelTest(TestCase):
 
 class UserInfoViewTest(TestCase):
     def setUp(self):
+        self.factory = RequestFactory()
         self.user = User.objects.create_user(
             username="testuser",
             email="testuser@example.com",
@@ -100,9 +101,13 @@ class UserInfoViewTest(TestCase):
             refresh_token='refresh_token',
         )
         
+        # Create a mock request
+        request = self.factory.get('/')
+        request.scheme = 'https'
+        
         # Create ID token
         aud = self.oidc_client.client_id
-        id_token = create_id_token(token=self.access_token, user=self.user, aud=aud)
+        id_token = create_id_token(token=self.access_token, user=self.user, aud=aud, request=request)
         
         # Update the access token with the id_token
         self.access_token._id_token = id_token
