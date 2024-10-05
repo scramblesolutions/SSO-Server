@@ -68,11 +68,10 @@ class UserInfoViewTest(TestCase):
             name="Test Vendor",
             client_id="test_client_id"
         )
-        self.client = Client.objects.create(
+        self.oidc_client = Client.objects.create(
             name="Test Client",
             client_id="test_client_id",
             client_secret="test_client_secret",
-            response_type="code",
             redirect_uris=["http://example.com"],
         )
 
@@ -84,5 +83,3 @@ class UserInfoViewTest(TestCase):
         self.assertNotEqual(data['sub'], str(self.user.id))
         pseudonym = Pseudonym.objects.get(user=self.user, vendor=self.vendor)
         self.assertEqual(data['sub'], str(pseudonym.pseudonym))
-
-# Remove the OIDCClaimsTest class as it relies on internal OIDC provider functions
