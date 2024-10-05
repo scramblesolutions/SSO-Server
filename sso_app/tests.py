@@ -4,6 +4,7 @@ from django.urls import reverse
 from .models import Vendor, Pseudonym
 from oidc_provider.models import Client, Token, RSAKey, ResponseType
 from oidc_provider.lib.utils.token import create_token
+from oidc_provider.lib.utils.oauth2 import generate_id_token
 from django.utils import timezone
 from datetime import timedelta
 import json
@@ -90,8 +91,8 @@ class UserInfoViewTest(TestCase):
         # Create an RSA key for token signing
         RSAKey.objects.create(key='testkey')
         
-        # Create a token
-        token = create_token(self.user, self.oidc_client, [])
+        # Generate id_token
+        id_token_dic = generate_id_token(self.user, self.oidc_client)
         
         # Create an access token
         self.access_token = Token.objects.create(
@@ -99,9 +100,9 @@ class UserInfoViewTest(TestCase):
             client=self.oidc_client,
             expires_at=timezone.now() + timedelta(days=1),
             _scope='openid profile',
-            access_token=token.access_token,
-            refresh_token=token.refresh_token,
-            _id_token=json.dumps(token.id_token)
+            access_token='access_token',
+            refresh_token='refresh_token',
+            _id_token=json.dumps(id_token_dic)
         )
 
     def test_userinfo_with_pseudonym(self):
