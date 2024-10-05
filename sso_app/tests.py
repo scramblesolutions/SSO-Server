@@ -2,7 +2,9 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Vendor, Pseudonym
-from oidc_provider.models import Client
+from oidc_provider.models import Client, Token
+from oidc_provider.lib.utils.token import create_token
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -74,10 +76,14 @@ class UserInfoViewTest(TestCase):
             client_secret="test_client_secret",
             redirect_uris=["http://example.com"],
         )
+        self.token = create_token(self.user, self.oidc_client, [])
+        self.id_token = self.token.id_token
 
     def test_userinfo_with_pseudonym(self):
-        self.client.login(username="testuser", password="testpass123")
-        response = self.client.get(reverse('oidc_provider:userinfo'), {'client_id': 'test_client_id'})
+        headers = {
+            'HTTP_AUTHORIZATION': f'Bearer {self.token.access_token}'
+        }
+        response = self.client.get(reverse('oidc_provider:userinfo'), **headers)
         self.assertEqual(response.status_code, 200)
         data = response.json()
         self.assertNotEqual(data['sub'], str(self.user.id))
