@@ -92,7 +92,7 @@ class UserInfoViewTest(TestCase):
         
         # Create ID token
         aud = self.oidc_client.client_id
-        id_token = create_id_token(self.user, aud, self.oidc_client)
+        id_token = create_id_token(user=self.user, aud=aud, client=self.oidc_client)
         
         # Create an access token
         self.access_token = Token.objects.create(
