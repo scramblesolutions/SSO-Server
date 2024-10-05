@@ -103,7 +103,8 @@ class UserInfoViewTest(TestCase):
         
         # Create a mock request
         request = self.factory.get('/')
-        request.scheme = 'https'
+        request.META['SERVER_NAME'] = 'testserver'
+        request.META['SERVER_PORT'] = '443'
         
         # Create ID token
         aud = self.oidc_client.client_id
