@@ -173,16 +173,6 @@ OIDC_TEMPLATES = {
     'error': 'error.html',
 }
 
-
-def custom_claims(user):
-    profile = user.profile
-    return {
-        'profile_image': profile.profile_image.url if profile.profile_image else '',
-        'bio': profile.bio,
-        # Add any other custom claims you need
-    }
-
-
 OIDC_EXTRA_SCOPE_CLAIMS = 'sso_app.utils.CustomScopeClaims'
 
 # python manage.py creatersakey
