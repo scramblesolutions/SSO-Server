@@ -7,16 +7,25 @@ from rest_framework.permissions import BasePermission
 import base64
 
 from sso_app.forms import LoginForm, RegisterForm, UserForm, ProfileForm
+from sso_app.models import Vendor, Pseudonym
 
 User = get_user_model()
 
-
 def userinfoview(request):
     user = request.user
-    profile = user.profile  # Assuming the Profile model is linked to the User model via a OneToOneField
+    profile = user.profile
+
+    # Get the vendor from the client_id in the request
+    vendor_client_id = request.GET.get('client_id')
+    if vendor_client_id:
+        vendor = Vendor.objects.get(client_id=vendor_client_id)
+        pseudonym, _ = Pseudonym.objects.get_or_create(user=user, vendor=vendor)
+        sub = str(pseudonym.pseudonym)
+    else:
+        sub = str(user.id)
 
     user_info = {
-        "sub": str(user.id),
+        "sub": sub,
         "given_name": user.first_name,
         "family_name": user.last_name,
         "nickname": user.username,
@@ -26,7 +35,6 @@ def userinfoview(request):
     }
 
     return JsonResponse(user_info)
-
 
 class HasScope(BasePermission):
     def has_permission(self, request, view):
@@ -38,7 +46,6 @@ class HasScope(BasePermission):
         token = request.auth
         scopes = token.get('scope', '').split()
         return required_scope in scopes
-
 
 def image_to_base64(image_field):
     """
@@ -55,14 +62,20 @@ def image_to_base64(image_field):
 
     return base64_encoded_image
 
-
 def userinfo(claims, user):
+    vendor_client_id = claims.get('aud')  # 'aud' claim contains the client ID
+    if vendor_client_id:
+        vendor = Vendor.objects.get(client_id=vendor_client_id)
+        pseudonym, _ = Pseudonym.objects.get_or_create(user=user, vendor=vendor)
+        claims['sub'] = str(pseudonym.pseudonym)  # Use the pseudonym as the subject identifier
+    else:
+        claims['sub'] = str(user.id)  # Fallback to user ID if no vendor is identified
+
     claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
     claims['picture'] = image_to_base64(user.profile.profile_image)
     claims['profile'] = user.profile.bio
 
     return claims
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -74,6 +87,13 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
+                
+                # Get or create pseudonym for the user and vendor
+                vendor_client_id = request.GET.get('client_id')  # Assuming the client_id is passed in the URL
+                if vendor_client_id:
+                    vendor, _ = Vendor.objects.get_or_create(client_id=vendor_client_id)
+                    pseudonym, created = Pseudonym.objects.get_or_create(user=user, vendor=vendor)
+                
                 if next_url:
                     return redirect(next_url)
                 else:
@@ -88,7 +108,6 @@ def login_view(request):
         'form': form,
         'next': next_url
     })
-
 
 def register_view(request):
     if request.method == 'POST':
@@ -105,15 +124,12 @@ def register_view(request):
 
     return render(request, 'register.html', {'form': form})
 
-
 def logout_view(request):
     logout(request)
     return redirect('custom_home')
 
-
 def home_view(request):
     return render(request, 'home.html')
-
 
 @login_required
 def edit_profile(request):
