@@ -1,3 +1,5 @@
+#entrypoint.sh
+
 #!/bin/sh
 
 python manage.py migrate --no-input
