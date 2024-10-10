@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8002:8004"
+      - "8001:8000"
 
   nginx:
     image: nginx:stable-alpine
@@ -18,7 +18,7 @@ services:
       - static:/static
       - ./nginx:/etc/nginx/conf.d
     ports:
-      - "82:84"
+      - "81:80"
     depends_on:
       - django_gunicorn
 
