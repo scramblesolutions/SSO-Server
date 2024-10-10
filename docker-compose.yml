@@ -12,16 +12,19 @@ services:
       - "8001:8000"
 
   nginx:
-    build: ./nginx
+    image: nginx:stable-alpine
+    platform: linux/amd64
     volumes:
       - static:/static
+      - ./nginx:/etc/nginx/conf.d
     ports:
       - "81:80"
     depends_on:
       - django_gunicorn
 
   db:
-    image: mysql:5.7
+    image: mysql:8.0
+    platform: linux/amd64
     env_file:
       - .env
     volumes:
