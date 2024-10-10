@@ -30,7 +30,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
-      - "3306:3304"
+      - "3307:3306"
 
 volumes:
   static:
