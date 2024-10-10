@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8001:8000"
+      - "8002:8004"
 
   nginx:
     image: nginx:stable-alpine
@@ -18,7 +18,7 @@ services:
       - static:/static
       - ./nginx:/etc/nginx/conf.d
     ports:
-      - "81:80"
+      - "82:84"
     depends_on:
       - django_gunicorn
 
@@ -30,7 +30,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
-      - "3308:3306"
+      - "3302:3304"
 
 volumes:
   static:
