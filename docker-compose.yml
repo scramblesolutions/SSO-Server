@@ -18,7 +18,7 @@ services:
       - static:/static
       - ./nginx:/etc/nginx/conf.d
     ports:
-      - "81:80"
+      - "82:80"
     depends_on:
       - django_gunicorn
 
